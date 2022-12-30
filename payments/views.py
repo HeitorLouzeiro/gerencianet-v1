@@ -8,6 +8,21 @@ gn = Gerencianet(CREDENTIALS)
 
 
 def home(request):
+    # Creating a plan in Gerencianet
+    # body = {
+    #     'name': "Meu Plano de Assinatura",
+    #     'repeats': None,
+    #     'interval': 1
+    # }
+
+    # response = gn.create_plan(params=None, body=body)
+    # print(response)
+
+    # id plan
+    params = {
+        'id': 9935
+    }
+
     body = {
         'items': [{
             'name': "Product 1",
@@ -15,17 +30,8 @@ def home(request):
             'amount': 2
         }],
         'payment': {
-            'credit_card': {
-                'installments': 5,
-                'payment_token': "abe5cec2500bbd2ced45bc728ca1ce9015278bc5",
-                'billing_address': {
-                    'street': "Av. JK",
-                    'number': 909,
-                    'neighborhood': "Bauxita",
-                    'zipcode': "35400000",
-                    'city': "Ouro Preto",
-                    'state': "MG"
-                },
+            'banking_billet': {
+                'expire_at': '2023-01-31',
                 'customer': {
                     'name': "Gorbadoc Oldbuck",
                     'email': "heitorlouzeiro2019@gmail.com",
@@ -36,6 +42,7 @@ def home(request):
             }
         }
     }
-    response = gn.create_charge_onestep(params=None, body=body)
+
+    response = gn.one_step_subscription(params=params, body=body)
     print(response)
     return render(request, 'payments/pages/home.html')
