@@ -1,38 +1,28 @@
-import base64
 # Create your views here.
-import os
-
-import requests
 from django.shortcuts import render
 from gerencianet import Gerencianet
 
-credentials = {
-    "client_id": os.environ.get('CLIENT_ID'),
-    "client_secret": os.environ.get('CLIENT_SECRET'),
-}
+from credentials.credentials import CREDENTIALS
 
-certificado = 'credentials/certificate/homologacao-429610-certficate.pem'
+gn = Gerencianet(CREDENTIALS)
 
 
 def home(request):
-    auth = base64.b64encode(
-        (f"{credentials['client_id']}:{credentials['client_secret']}"
-         ).encode()).decode()
-
-    # Para ambiente de Desenvolvimento
-    url = "https://api-pix-h.gerencianet.com.br/oauth/token"
-
-    payload = "{\r\n    \"grant_type\": \"client_credentials\"\r\n}"
-    headers = {
-        'Authorization': f"Basic {auth}",
-        'Content-Type': 'application/json'
+    body = {
+        'calendario': {
+            'expiracao': 3600
+        },
+        'devedor': {
+            'cpf': '12345678909',
+            'nome': 'Francisco da Silva'
+        },
+        'valor': {
+            'original': '123.45'
+        },
+        'chave': '2f2924f3-78f3-4864-8e84-ee083c4f5bb0',
+        'solicitacaoPagador': 'Cobrança dos serviços prestados.'
     }
 
-    response = requests.request("POST",
-                                url,
-                                headers=headers,
-                                data=payload,
-                                cert=certificado)
-
-    print(response.text)
+    response = gn.pix_create_immediate_charge(body=body)
+    print(response)
     return render(request, 'payments/pages/home.html')
