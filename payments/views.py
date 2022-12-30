@@ -8,24 +8,30 @@ gn = Gerencianet(CREDENTIALS)
 
 
 def home(request):
-    params = {
-        'id': 1785912
-    }
     body = {
+        'items': [{
+            'name': "Couse 1",
+            'value': 1000,
+            'amount': 2
+        }],
+        'shippings': [{
+            'name': "Default Shipping Cost",
+            'value': 100
+        }],
         'payment': {
             'banking_billet': {
-                'expire_at': '2022-12-31',
+                'expire_at': '2023-01-01',
                 'customer': {
                     'name': "Gorbadoc Oldbuck",
-                    'email': "oldbuck@gerencianet.com.br",
-                    'cpf': "94271564656",
+                    'email': "heitorlouzeiro2019@gmail.com",
+                    'cpf': "14014603059",
                     'birth': "1977-01-15",
-                    'phone_number': "5144916523"
+                    'phone_number': "62986070247"
+
                 }
             }
         }
     }
-
-    response = gn.pay_charge(params=params, body=body)
+    response = gn.create_charge_onestep(params=None, body=body)
     print(response)
     return render(request, 'payments/pages/home.html')
