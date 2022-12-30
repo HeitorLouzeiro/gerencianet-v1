@@ -14,82 +14,28 @@ def home(request):
             'value': 1000,
             'amount': 2
         }],
-        'shippings': [{
-            'name': "Default Shipping Cost",
-            'value': 100
-        }]
-    }
-    response = gn.create_charge(body=body)
-    transaction_id = response['data']['charge_id']
-
-    params = {
-        'id': transaction_id
-    }
-    body = {
-        'title': 'Balancete Demonstrativo',
-        'body': [
-            {
-                'header': 'Demonstrativo de Consumo',
-                'tables': [
-                    {
-                        'rows': [
-                            [
-                                {
-                                    'align': 'left',
-                                    'color': '#000000',
-                                    'style': 'bold',
-                                    'text': 'Exemplo de despesa',
-                                    'colspan': 2
-                                },
-                                {
-                                    'align': 'left',
-                                    'color': '#000000',
-                                    'style': 'bold',
-                                    'text': 'Total lançado',
-                                    'colspan': 2
-                                }
-                            ],
-                            [
-                                {
-                                    'align': 'left',
-                                    'color': '#000000',
-                                    'style': 'normal',
-                                    'text': 'Instalação',
-                                    'colspan': 2
-                                },
-                                {
-                                    'align': 'left',
-                                    'color': '#000000',
-                                    'style': 'normal',
-                                    'text': 'R$ 100,00',
-                                    'colspan': 2
-                                }
-                            ]
-                        ]
-                    }
-                ]
-            },
-            {
-                'header': 'Balancete Geral',
-                'tables': [
-                    {
-                        'rows': [
-                            [
-                                {
-                                    'align': 'left',
-                                    'color': '#000000',
-                                    'style': 'normal',
-                                    'text': 'Confira na documentação da Gerencianet todas as configurações possíveis.',
-                                    'colspan': 4
-                                }
-                            ]
-                        ]
-                    }
-                ]
+        'payment': {
+            'credit_card': {
+                'installments': 5,
+                'payment_token': "abe5cec2500bbd2ced45bc728ca1ce9015278bc5",
+                'billing_address': {
+                    'street': "Av. JK",
+                    'number': 909,
+                    'neighborhood': "Bauxita",
+                    'zipcode': "35400000",
+                    'city': "Ouro Preto",
+                    'state': "MG"
+                },
+                'customer': {
+                    'name': "Gorbadoc Oldbuck",
+                    'email': "heitorlouzeiro2019@gmail.com",
+                    'cpf': "94271564656",
+                    'birth': "1977-01-15",
+                    'phone_number': "5144916523"
+                }
             }
-        ]
+        }
     }
-
-    response = gn.create_charge_balance_sheet(params=params, body=body)
+    response = gn.create_charge_onestep(params=None, body=body)
     print(response)
     return render(request, 'payments/pages/home.html')
